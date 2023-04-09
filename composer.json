@@ -1,0 +1,31 @@
+{
+    "name": "sicet7/php-http-plugin",
+    "description": "container plugin for HTTP PSR-15 handler routing",
+    "type": "library",
+    "require": {
+        "psr/http-server-handler": "^1.0",
+        "sicet7/php-plugin-container": "dev-master",
+        "nikic/fast-route": "^1.3",
+        "psr/http-message": "^1.1",
+        "psr/http-server-middleware": "^1.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sicet7\\HTTP\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Martin René Sørensen",
+            "email": "git@sicet7.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:sicet7/php-plugin-container.git"
+        }
+    ]
+}
