@@ -3,6 +3,7 @@
     "description": "container plugin for HTTP PSR-15 handler routing",
     "type": "library",
     "require": {
+        "php": ">=8.2",
         "psr/http-server-handler": "^1.0",
         "sicet7/php-plugin-container": "dev-master",
         "nikic/fast-route": "^1.3",
