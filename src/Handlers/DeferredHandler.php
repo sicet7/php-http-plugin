@@ -8,8 +8,9 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Sicet7\HTTP\Interfaces\HasIdentifierInterface;
 
-class DeferredHandler implements RequestHandlerInterface
+class DeferredHandler implements RequestHandlerInterface, HasIdentifierInterface
 {
     /**
      * @param ContainerInterface $container
@@ -30,5 +31,13 @@ class DeferredHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->container->get($this->class)->handle($request);
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->class;
     }
 }

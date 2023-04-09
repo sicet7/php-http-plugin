@@ -9,7 +9,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Sicet7\HTTP\Exceptions\HttpException;
 use Sicet7\HTTP\Interfaces\AcceptsMiddlewareInterface;
 use Sicet7\HTTP\Interfaces\HandlerContainerInterface;
-use Sicet7\HTTP\Middlewares\FastRouteDispatcherMiddleware;
 use Sicet7\HTTP\RequestAttributes\PathArguments;
 use Sicet7\HTTP\RequestAttributes\RoutingResult;
 
