@@ -16,11 +16,6 @@ class RouteCollectorProxy implements HandlerContainerInterface, RouteCollectorIn
      */
     private array $routes = [];
 
-    public function __construct(
-        private readonly FastRouteRouteCollector $routeCollector
-    ) {
-    }
-
     /**
      * @param string $id
      * @return RequestHandlerInterface
@@ -37,10 +32,20 @@ class RouteCollectorProxy implements HandlerContainerInterface, RouteCollectorIn
     public function add(RouteInterface $route): void
     {
         $this->routes[$route->getIdentifier()] = $route;
-        $this->routeCollector->addRoute(
-            array_map(fn(HttpMethod $method) => $method->value, $route->getMethods()),
-            $route->getPattern(),
-            $route->getIdentifier()
-        );
+    }
+
+    /**
+     * @param FastRouteRouteCollector $collector
+     * @return void
+     */
+    public function apply(FastRouteRouteCollector $collector): void
+    {
+        foreach ($this->routes as $route) {
+            $collector->addRoute(
+                array_map(fn(HttpMethod $method) => $method->value, $route->getMethods()),
+                $route->getPattern(),
+                $route->getIdentifier()
+            );
+        }
     }
 }

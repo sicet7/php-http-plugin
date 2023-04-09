@@ -2,6 +2,8 @@
 
 namespace Sicet7\HTTP\Interfaces;
 
+use FastRoute\RouteCollector as FastRouteRouteCollector;
+
 interface RouteCollectorInterface
 {
     /**
@@ -9,4 +11,10 @@ interface RouteCollectorInterface
      * @return void
      */
     public function add(RouteInterface $route): void;
+
+    /**
+     * @param FastRouteRouteCollector $collector
+     * @return void
+     */
+    public function apply(FastRouteRouteCollector $collector): void;
 }

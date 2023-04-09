@@ -35,15 +35,18 @@ final class HttpPlugin implements PluginInterface
         $source->addDefinition(new ObjectDefinition(DataGenerator::class, DataGenerator::class));
 
         //FastRouteRouteCollector
-        $routeCollectorDefinition = new ObjectDefinition(
+        $source->addDefinition(new FactoryDefinition(
             FastRouteRouteCollector::class,
-            FastRouteRouteCollector::class
-        );
-        $routeCollectorDefinition->setConstructorInjection(MethodInjection::constructor([
-            new Reference(RouteParser::class),
-            new Reference(DataGenerator::class)
-        ]));
-        $source->addDefinition($routeCollectorDefinition);
+            function (
+                RouteParser $routeParser,
+                DataGenerator $dataGenerator,
+                RouteCollectorInterface $routeCollector
+            ): FastRouteRouteCollector {
+                $collector = new FastRouteRouteCollector($routeParser, $dataGenerator);
+                $routeCollector->apply($collector);
+                return $collector;
+            }
+        ));
 
         //GroupCountBasedDispatcher
         $source->addDefinition(new FactoryDefinition(
@@ -67,14 +70,7 @@ final class HttpPlugin implements PluginInterface
         $source->addDefinition($routingMiddlewareDefinition);
 
         //RouteCollectorProxy
-        $routeCollectorProxyDef = new ObjectDefinition(
-            RouteCollectorProxy::class,
-            RouteCollectorProxy::class
-        );
-        $routeCollectorProxyDef->setConstructorInjection(MethodInjection::constructor([
-            new Reference(FastRouteRouteCollector::class)
-        ]));
-        $source->addDefinition($routeCollectorProxyDef);
+        $source->addDefinition(new ObjectDefinition(RouteCollectorProxy::class, RouteCollectorProxy::class));
         $source->addDefinition($this->makeRef(HandlerContainerInterface::class, RouteCollectorProxy::class));
         $source->addDefinition($this->makeRef(RouteCollectorInterface::class, RouteCollectorProxy::class));
 
