@@ -20,7 +20,7 @@ use FastRoute\RouteParser\Std as RouteParser;
 use FastRoute\DataGenerator\GroupCountBased as DataGenerator;
 use FastRoute\RouteCollector as FastRouteRouteCollector;
 
-final class Plugin implements PluginInterface
+final class HttpPlugin implements PluginInterface
 {
     /**
      * @param MutableDefinitionSource $source
