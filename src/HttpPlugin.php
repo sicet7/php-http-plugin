@@ -19,43 +19,29 @@ use Sicet7\Plugin\Container\Interfaces\PluginInterface;
 use FastRoute\RouteParser\Std as RouteParser;
 use FastRoute\DataGenerator\GroupCountBased as DataGenerator;
 use FastRoute\RouteCollector as FastRouteRouteCollector;
+use Sicet7\Plugin\Container\MutableDefinitionSourceHelper;
 
 final class HttpPlugin implements PluginInterface
 {
     /**
-     * @param MutableDefinitionSource $source
+     * @param MutableDefinitionSourceHelper $source
      * @return void
      */
-    public function register(MutableDefinitionSource $source): void
+    public function register(MutableDefinitionSourceHelper $source): void
     {
         //RouteParser
-        $source->addDefinition(new FactoryDefinition(
-            RouteParser::class,
-            function (): RouteParser {
-                return new RouteParser();
-            }
-        ));
+        $source->object(RouteParser::class, RouteParser::class);
 
         //DataGenerator
-        $source->addDefinition(new FactoryDefinition(
-            DataGenerator::class,
-            function (): DataGenerator {
-                return new DataGenerator();
-            }
-        ));
+        $source->object(DataGenerator::class, DataGenerator::class);
 
         //RouteCollectorProxy
-        $source->addDefinition(new FactoryDefinition(
-            RouteCollectorProxy::class,
-            function(): RouteCollectorProxy {
-                return new RouteCollectorProxy();
-            }
-        ));
-        $source->addDefinition($this->makeRef(HandlerContainerInterface::class, RouteCollectorProxy::class));
-        $source->addDefinition($this->makeRef(RouteCollectorInterface::class, RouteCollectorProxy::class));
+        $source->object(RouteCollectorProxy::class, RouteCollectorProxy::class);
+        $source->reference(HandlerContainerInterface::class, RouteCollectorProxy::class);
+        $source->reference(RouteCollectorInterface::class, RouteCollectorProxy::class);
 
         //RoutingHandler
-        $source->addDefinition(new FactoryDefinition(
+        $source->factory(
             RoutingHandler::class,
             function (
                 FastRouteDispatcherMiddleware $routingMiddleware,
@@ -63,12 +49,12 @@ final class HttpPlugin implements PluginInterface
             ): RoutingHandler {
                 return new RoutingHandler($routingMiddleware, $handlerContainer);
             }
-        ));
-        $source->addDefinition($this->makeRef(RequestHandlerInterface::class, RoutingHandler::class));
-        $source->addDefinition($this->makeRef(AcceptsMiddlewareInterface::class, RoutingHandler::class));
+        );
+        $source->reference(RequestHandlerInterface::class, RoutingHandler::class);
+        $source->reference(AcceptsMiddlewareInterface::class, RoutingHandler::class);
 
         //FastRouteRouteCollector
-        $source->addDefinition(new FactoryDefinition(
+        $source->factory(
             FastRouteRouteCollector::class,
             function (
                 RouteParser $routeParser,
@@ -79,39 +65,20 @@ final class HttpPlugin implements PluginInterface
                 $routeCollector->apply($collector);
                 return $collector;
             }
-        ));
+        );
 
         //GroupCountBasedDispatcher
-        $source->addDefinition(new FactoryDefinition(
+        $source->factory(
             GroupCountBasedDispatcher::class,
             function (
                 FastRouteRouteCollector $routeCollector
             ): GroupCountBasedDispatcher {
                 return new GroupCountBasedDispatcher($routeCollector->getData());
             }
-        ));
-        $source->addDefinition($this->makeRef(DispatcherInterface::class, GroupCountBasedDispatcher::class));
+        );
+        $source->reference(DispatcherInterface::class, GroupCountBasedDispatcher::class);
 
         //FastRouteDispatcherMiddleware
-        $source->addDefinition(new FactoryDefinition(
-            FastRouteDispatcherMiddleware::class,
-            function (
-                DispatcherInterface $dispatcher
-            ): FastRouteDispatcherMiddleware {
-                return new FastRouteDispatcherMiddleware($dispatcher);
-            }
-        ));
-    }
-
-    /**
-     * @param string $name
-     * @param string $target
-     * @return Reference
-     */
-    private function makeRef(string $name, string $target): Reference
-    {
-        $ref = new Reference($target);
-        $ref->setName($name);
-        return $ref;
+        $source->autowire(FastRouteDispatcherMiddleware::class, FastRouteDispatcherMiddleware::class);
     }
 }
