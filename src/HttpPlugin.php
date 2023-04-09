@@ -34,6 +34,21 @@ final class HttpPlugin implements PluginInterface
         //DataGenerator
         $source->addDefinition(new ObjectDefinition(DataGenerator::class, DataGenerator::class));
 
+        //RouteCollectorProxy
+        $source->addDefinition(new ObjectDefinition(RouteCollectorProxy::class, RouteCollectorProxy::class));
+        $source->addDefinition($this->makeRef(HandlerContainerInterface::class, RouteCollectorProxy::class));
+        $source->addDefinition($this->makeRef(RouteCollectorInterface::class, RouteCollectorProxy::class));
+
+        //RoutingHandler
+        $routingHandlerDef = new ObjectDefinition(RoutingHandler::class, RoutingHandler::class);
+        $routingHandlerDef->setConstructorInjection(MethodInjection::constructor([
+            new Reference(FastRouteDispatcherMiddleware::class),
+            new Reference(HandlerContainerInterface::class)
+        ]));
+        $source->addDefinition($routingHandlerDef);
+        $source->addDefinition($this->makeRef(RequestHandlerInterface::class, RoutingHandler::class));
+        $source->addDefinition($this->makeRef(AcceptsMiddlewareInterface::class, RoutingHandler::class));
+
         //FastRouteRouteCollector
         $source->addDefinition(new FactoryDefinition(
             FastRouteRouteCollector::class,
@@ -68,21 +83,6 @@ final class HttpPlugin implements PluginInterface
             new Reference(DispatcherInterface::class)
         ]));
         $source->addDefinition($routingMiddlewareDefinition);
-
-        //RouteCollectorProxy
-        $source->addDefinition(new ObjectDefinition(RouteCollectorProxy::class, RouteCollectorProxy::class));
-        $source->addDefinition($this->makeRef(HandlerContainerInterface::class, RouteCollectorProxy::class));
-        $source->addDefinition($this->makeRef(RouteCollectorInterface::class, RouteCollectorProxy::class));
-
-        //RoutingHandler
-        $routingHandlerDef = new ObjectDefinition(RoutingHandler::class, RoutingHandler::class);
-        $routingHandlerDef->setConstructorInjection(MethodInjection::constructor([
-            new Reference(FastRouteDispatcherMiddleware::class),
-            new Reference(HandlerContainerInterface::class)
-        ]));
-        $source->addDefinition($routingHandlerDef);
-        $source->addDefinition($this->makeRef(RequestHandlerInterface::class, RoutingHandler::class));
-        $source->addDefinition($this->makeRef(AcceptsMiddlewareInterface::class, RoutingHandler::class));
     }
 
     /**
