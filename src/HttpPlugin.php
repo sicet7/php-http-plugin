@@ -52,9 +52,9 @@ final class HttpPlugin implements PluginInterface
         $source->addDefinition(new FactoryDefinition(
             GroupCountBasedDispatcher::class,
             function (
-                DataGenerator $dataGenerator
+                FastRouteRouteCollector $routeCollector
             ): GroupCountBasedDispatcher {
-                return new GroupCountBasedDispatcher($dataGenerator->getData());
+                return new GroupCountBasedDispatcher($routeCollector->getData());
             }
         ));
         $source->addDefinition($this->makeRef(DispatcherInterface::class, GroupCountBasedDispatcher::class));
