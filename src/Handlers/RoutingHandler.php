@@ -21,11 +21,11 @@ class RoutingHandler implements RequestHandlerInterface, AcceptsMiddlewareInterf
     private RequestHandlerInterface $handler;
 
     /**
-     * @param FastRouteDispatcherMiddleware $routingMiddleware
+     * @param MiddlewareInterface $routingMiddleware
      * @param HandlerContainerInterface $handlerContainer
      */
     public function __construct(
-        FastRouteDispatcherMiddleware $routingMiddleware,
+        MiddlewareInterface $routingMiddleware,
         private readonly HandlerContainerInterface $handlerContainer
     ) {
         $this->handler = new class($this) implements RequestHandlerInterface {

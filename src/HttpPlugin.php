@@ -29,23 +29,41 @@ final class HttpPlugin implements PluginInterface
     public function register(MutableDefinitionSource $source): void
     {
         //RouteParser
-        $source->addDefinition(new ObjectDefinition(RouteParser::class, RouteParser::class));
+        $source->addDefinition(new FactoryDefinition(
+            RouteParser::class,
+            function (): RouteParser {
+                return new RouteParser();
+            }
+        ));
 
         //DataGenerator
-        $source->addDefinition(new ObjectDefinition(DataGenerator::class, DataGenerator::class));
+        $source->addDefinition(new FactoryDefinition(
+            DataGenerator::class,
+            function (): DataGenerator {
+                return new DataGenerator();
+            }
+        ));
 
         //RouteCollectorProxy
-        $source->addDefinition(new ObjectDefinition(RouteCollectorProxy::class, RouteCollectorProxy::class));
+        $source->addDefinition(new FactoryDefinition(
+            RouteCollectorProxy::class,
+            function(): RouteCollectorProxy {
+                return new RouteCollectorProxy();
+            }
+        ));
         $source->addDefinition($this->makeRef(HandlerContainerInterface::class, RouteCollectorProxy::class));
         $source->addDefinition($this->makeRef(RouteCollectorInterface::class, RouteCollectorProxy::class));
 
         //RoutingHandler
-        $routingHandlerDef = new ObjectDefinition(RoutingHandler::class, RoutingHandler::class);
-        $routingHandlerDef->setConstructorInjection(MethodInjection::constructor([
-            new Reference(FastRouteDispatcherMiddleware::class),
-            new Reference(HandlerContainerInterface::class)
-        ]));
-        $source->addDefinition($routingHandlerDef);
+        $source->addDefinition(new FactoryDefinition(
+            RoutingHandler::class,
+            function (
+                FastRouteDispatcherMiddleware $routingMiddleware,
+                HandlerContainerInterface $handlerContainer
+            ): RoutingHandler {
+                return new RoutingHandler($routingMiddleware, $handlerContainer);
+            }
+        ));
         $source->addDefinition($this->makeRef(RequestHandlerInterface::class, RoutingHandler::class));
         $source->addDefinition($this->makeRef(AcceptsMiddlewareInterface::class, RoutingHandler::class));
 
@@ -75,14 +93,14 @@ final class HttpPlugin implements PluginInterface
         $source->addDefinition($this->makeRef(DispatcherInterface::class, GroupCountBasedDispatcher::class));
 
         //FastRouteDispatcherMiddleware
-        $routingMiddlewareDefinition = new ObjectDefinition(
+        $source->addDefinition(new FactoryDefinition(
             FastRouteDispatcherMiddleware::class,
-            FastRouteDispatcherMiddleware::class
-        );
-        $routingMiddlewareDefinition->setConstructorInjection(MethodInjection::constructor([
-            new Reference(DispatcherInterface::class)
-        ]));
-        $source->addDefinition($routingMiddlewareDefinition);
+            function (
+                DispatcherInterface $dispatcher
+            ): FastRouteDispatcherMiddleware {
+                return new FastRouteDispatcherMiddleware($dispatcher);
+            }
+        ));
     }
 
     /**
