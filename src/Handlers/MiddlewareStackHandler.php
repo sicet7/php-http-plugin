@@ -6,16 +6,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Sicet7\HTTP\Interfaces\AcceptsMiddlewareInterface;
 
-readonly class MiddlewareHandler implements RequestHandlerInterface
+class MiddlewareStackHandler implements RequestHandlerInterface, AcceptsMiddlewareInterface
 {
     /**
      * @param RequestHandlerInterface $handler
-     * @param MiddlewareInterface $middleware
      */
     public function __construct(
-        private RequestHandlerInterface $handler,
-        private MiddlewareInterface $middleware,
+        private RequestHandlerInterface $handler
     ) {
     }
 
@@ -25,6 +24,15 @@ readonly class MiddlewareHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->middleware->process($request, $this->handler);
+        return $this->handler->handle($request);
+    }
+
+    /**
+     * @param MiddlewareInterface $middleware
+     * @return void
+     */
+    public function addMiddleware(MiddlewareInterface $middleware): void
+    {
+        $this->handler = new MiddlewareHandler($this->handler, $middleware);
     }
 }
