@@ -3,14 +3,24 @@
 namespace Sicet7\HTTP\Exceptions;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Sicet7\HttpUtils\Enums\Status\ClientError;
+use Sicet7\HttpUtils\Exceptions\HttpException;
 
 final class HttpNotFoundException extends HttpException
 {
-
-    protected $code = 404;
-
-    protected $message = 'Not found.';
-
-    protected string $title = '404 Not Found';
-    protected string $description = 'The requested resource could not be found. Please verify the URI and try again.';
+    /**
+     * @param ServerRequestInterface $request
+     * @param \Throwable|null $previous
+     */
+    public function __construct(
+        ServerRequestInterface $request,
+        ?\Throwable $previous = null)
+    {
+        parent::__construct(
+            $request,
+            ClientError::NOT_FOUND,
+            ClientError::NOT_FOUND->getReason(),
+            $previous
+        );
+    }
 }

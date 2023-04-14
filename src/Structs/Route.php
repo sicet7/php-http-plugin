@@ -6,10 +6,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sicet7\HTTP\Enums\HttpMethod;
 use Sicet7\HTTP\Handlers\MiddlewareHandler;
 use Sicet7\HTTP\Interfaces\HasIdentifierInterface;
 use Sicet7\HTTP\Interfaces\RouteInterface;
+use Sicet7\HttpUtils\Enums\Method;
 
 class Route implements RouteInterface
 {
@@ -19,7 +19,7 @@ class Route implements RouteInterface
     public readonly string $handlerId;
 
     /**
-     * @param HttpMethod[] $methods
+     * @param Method[] $methods
      * @param string $pattern
      * @param RequestHandlerInterface $handler
      */
@@ -28,7 +28,7 @@ class Route implements RouteInterface
         public readonly string $pattern,
         private RequestHandlerInterface $handler
     ) {
-        array_map(fn(HttpMethod $method) => $method, $this->methods);
+        array_map(fn(Method $method) => $method, $this->methods);
         if ($this->handler instanceof HasIdentifierInterface) {
             $this->handlerId = $this->handler->getIdentifier();
         } else {
@@ -63,7 +63,7 @@ class Route implements RouteInterface
     }
 
     /**
-     * @return HttpMethod[]
+     * @return Method[]
      */
     public function getMethods(): array
     {

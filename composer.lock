@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e19c3ef476e27ef81e6038f179f33eb",
+    "content-hash": "26c1fbd4d775211fdd4c072c0a9e4642",
     "packages": [
         {
             "name": "laravel/serializable-closure",
@@ -464,6 +464,46 @@
             "time": "2023-04-11T06:14:47+00:00"
         },
         {
+            "name": "sicet7/php-http-utils",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sicet7/php-http-utils.git",
+                "reference": "5a1385ea937202ea4b187613f466af10e5df55e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sicet7/php-http-utils/zipball/5a1385ea937202ea4b187613f466af10e5df55e4",
+                "reference": "5a1385ea937202ea4b187613f466af10e5df55e4",
+                "shasum": ""
+            },
+            "require": {
+                "psr/http-message": "^1.0 || ^2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sicet7\\HttpUtils\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin René Sørensen",
+                    "email": "git@sicet7.com"
+                }
+            ],
+            "description": "HTTP utillity classes.",
+            "support": {
+                "source": "https://github.com/sicet7/php-http-utils/tree/master",
+                "issues": "https://github.com/sicet7/php-http-utils/issues"
+            },
+            "time": "2023-04-14T19:34:24+00:00"
+        },
+        {
             "name": "sicet7/php-plugin-container",
             "version": "dev-master",
             "source": {
@@ -509,7 +549,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "sicet7/php-plugin-container": 20
+        "sicet7/php-plugin-container": 20,
+        "sicet7/php-http-utils": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

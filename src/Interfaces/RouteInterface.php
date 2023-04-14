@@ -3,12 +3,12 @@
 namespace Sicet7\HTTP\Interfaces;
 
 use Psr\Http\Server\RequestHandlerInterface;
-use Sicet7\HTTP\Enums\HttpMethod;
+use Sicet7\HttpUtils\Enums\Method;
 
 interface RouteInterface extends RequestHandlerInterface, HasIdentifierInterface, AcceptsMiddlewareInterface
 {
     /**
-     * @return HttpMethod[]
+     * @return Method[]
      */
     public function getMethods(): array;
 

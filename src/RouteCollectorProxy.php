@@ -3,11 +3,11 @@
 namespace Sicet7\HTTP;
 
 use Psr\Http\Server\RequestHandlerInterface;
-use Sicet7\HTTP\Enums\HttpMethod;
 use Sicet7\HTTP\Interfaces\HandlerContainerInterface;
 use Sicet7\HTTP\Interfaces\RouteCollectorInterface;
 use Sicet7\HTTP\Interfaces\RouteInterface;
 use FastRoute\RouteCollector as FastRouteRouteCollector;
+use Sicet7\HttpUtils\Enums\Method;
 
 class RouteCollectorProxy implements HandlerContainerInterface, RouteCollectorInterface
 {
@@ -42,7 +42,7 @@ class RouteCollectorProxy implements HandlerContainerInterface, RouteCollectorIn
     {
         foreach ($this->routes as $route) {
             $collector->addRoute(
-                array_map(fn(HttpMethod $method) => $method->value, $route->getMethods()),
+                array_map(fn(Method $method) => $method->value, $route->getMethods()),
                 $route->getPattern(),
                 $route->getIdentifier()
             );
