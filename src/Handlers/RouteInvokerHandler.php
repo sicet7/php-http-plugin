@@ -5,10 +5,10 @@ namespace Sicet7\HTTP\Handlers;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sicet7\HTTP\Exceptions\HttpException;
 use Sicet7\HTTP\Interfaces\HandlerContainerInterface;
 use Sicet7\HTTP\RequestAttributes\PathArguments;
 use Sicet7\HTTP\RequestAttributes\RoutingResult;
+use Sicet7\HttpUtils\Exceptions\HttpException;
 
 readonly class RouteInvokerHandler implements RequestHandlerInterface
 {
